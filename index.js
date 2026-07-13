@@ -7,7 +7,7 @@ const client = new Client({
   ] 
 });
 
-const SALON_PIEGE_ID = 'METS_ICI_TON_ID_DE_SALON';
+const SALON_PIEGE_ID = '1526200818729095238';
 
 client.on('messageCreate', async (message) => {
   if (message.channel.id !== SALON_PIEGE_ID) return;
