@@ -63,6 +63,7 @@ client.once('ready', () => {
   console.log(`Bot connecté en tant que ${client.user.tag}`);
 });
 
+console.log('Tentative de connexion à Discord...');
 client.login(process.env.BOT_TOKEN).catch((err) => {
   console.error('ERREUR DE CONNEXION:', err.message);
 });
