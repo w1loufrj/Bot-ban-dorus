@@ -63,4 +63,7 @@ client.once('ready', () => {
   console.log(`Bot connecté en tant que ${client.user.tag}`);
 });
 
-client.login(process.env.BOT_TOKEN);
+client.login(process.env.BOT_TOKEN).catch((err) => {
+  console.error('ERREUR DE CONNEXION:', err.message);
+});
+
