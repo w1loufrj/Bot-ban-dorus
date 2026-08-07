@@ -2,7 +2,6 @@ const { Client, GatewayIntentBits, ChannelType } = require('discord.js');
 const http = require('http');
 const https = require('https');
 
-// Mini serveur web pour que Render considère le service comme actif
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end('Bot en ligne');
@@ -25,6 +24,18 @@ client.on('error', (err) => {
 
 client.on('shardError', (err) => {
   console.error('ERREUR SHARD:', err.message);
+});
+
+client.on('shardDisconnect', (event, id) => {
+  console.log('SHARD DÉCONNECTÉ:', event.code, event.reason);
+});
+
+client.on('shardReconnecting', (id) => {
+  console.log('SHARD RECONNEXION...');
+});
+
+client.on('debug', (info) => {
+  console.log('DEBUG:', info);
 });
 
 process.on('unhandledRejection', (err) => {
@@ -75,12 +86,6 @@ client.on('messageCreate', async (message) => {
 
 client.once('ready', () => {
   console.log(`Bot connecté en tant que ${client.user.tag}`);
-});
-
-https.get('https://discord.com', (res) => {
-  console.log('Test connectivité Discord - Status:', res.statusCode);
-}).on('error', (err) => {
-  console.error('Test connectivité Discord - ERREUR:', err.message);
 });
 
 console.log('Tentative de connexion à Discord...');
