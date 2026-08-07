@@ -1,3 +1,7 @@
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
+
+
 const { Client, GatewayIntentBits, ChannelType } = require('discord.js');
 const http = require('http');
 const https = require('https');
