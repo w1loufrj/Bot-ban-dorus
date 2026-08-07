@@ -1,6 +1,8 @@
 const { Client, GatewayIntentBits, ChannelType } = require('discord.js');
 const http = require('http');
+const https = require('https');
 
+// Mini serveur web pour que Render considère le service comme actif
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end('Bot en ligne');
@@ -15,6 +17,18 @@ const client = new Client({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent
   ] 
+});
+
+client.on('error', (err) => {
+  console.error('ERREUR CLIENT:', err.message);
+});
+
+client.on('shardError', (err) => {
+  console.error('ERREUR SHARD:', err.message);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('REJECTION NON GÉRÉE:', err);
 });
 
 const SALONS_PIEGE_IDS = ['1526206401561497670'];
@@ -63,8 +77,13 @@ client.once('ready', () => {
   console.log(`Bot connecté en tant que ${client.user.tag}`);
 });
 
+https.get('https://discord.com', (res) => {
+  console.log('Test connectivité Discord - Status:', res.statusCode);
+}).on('error', (err) => {
+  console.error('Test connectivité Discord - ERREUR:', err.message);
+});
+
 console.log('Tentative de connexion à Discord...');
 client.login(process.env.BOT_TOKEN).catch((err) => {
   console.error('ERREUR DE CONNEXION:', err.message);
 });
-
