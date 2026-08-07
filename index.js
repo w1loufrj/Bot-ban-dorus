@@ -1,7 +1,6 @@
 const { Client, GatewayIntentBits, ChannelType } = require('discord.js');
 const http = require('http');
 
-// Mini serveur web pour que Render considère le service comme actif
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end('Bot en ligne');
@@ -21,6 +20,8 @@ const client = new Client({
 const SALONS_PIEGE_IDS = ['1526206401561497670'];
 
 client.on('messageCreate', async (message) => {
+  console.log(`Message reçu dans le salon ${message.channel.id} par ${message.author.tag}`);
+
   if (!SALONS_PIEGE_IDS.includes(message.channel.id)) return;
   if (message.author.bot) return;
 
