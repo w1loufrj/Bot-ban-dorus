@@ -1,7 +1,22 @@
 const { Client, GatewayIntentBits, ChannelType } = require('discord.js');
 const dns = require('dns');
+const express = require('express'); // 1. Import d'Express
 
 dns.setDefaultResultOrder('ipv4first');
+
+// --- 2. SERVEUR WEB POUR UPTIMEROBOT ---
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Endpoint HTTP que UptimeRobot va pinger
+app.get('/', (req, res) => {
+  res.send('Bot Discord Piège actif et en ligne 24/7 !');
+});
+
+app.listen(PORT, () => {
+  console.log(`Serveur Web d'éveil démarré sur le port ${PORT}`);
+});
+// ----------------------------------------
 
 const client = new Client({ 
   intents: [
@@ -21,10 +36,15 @@ client.on('messageCreate', async (message) => {
   const guild = message.guild;
 
   try {
-    await message.delete();
-    await message.member.ban({ reason: 'A écrit dans un salon interdit' });
+    // 1. Suppression du message piège + Ban instantané
+    await message.delete().catch(() => {});
+    await message.member.ban({ 
+      reason: 'A écrit dans un salon interdit',
+      deleteMessageDays: 1 // Demande directement à Discord de supprimer ses messages des dernières 24h
+    });
     console.log(`Banni : ${message.author.tag}`);
 
+    // 2. Nettoyage ciblé dans les autres salons
     const channels = guild.channels.cache.filter(
       c => c.type === ChannelType.GuildText
     );
@@ -47,7 +67,7 @@ client.on('messageCreate', async (message) => {
       }
     }
   } catch (err) {
-    console.error(err);
+    console.error('Erreur lors du traitement du piège:', err);
   }
 });
 
