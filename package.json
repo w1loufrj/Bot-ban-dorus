@@ -9,3 +9,5 @@
     "discord.js": "^14.14.1"
   }
 }
+
+npm install express
